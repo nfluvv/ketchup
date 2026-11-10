@@ -31,6 +31,7 @@ model User {
   orders Order[]
   decks Deck[]
   cardProgresses CardProgress[]
+  reviewLogs ReviewLog[]
 }
 
 model RateLimitAttempt {
@@ -73,6 +74,7 @@ model Card {
 
   @@map("cards")
   cardProgresses CardProgress[]
+  reviewLogs ReviewLog[]
 }
 
 model StudySession {
@@ -87,6 +89,20 @@ model StudySession {
   @@index([userId, completedAt])
   @@index([userId, deckId, completedAt])
   @@map("study_sessions")
+}
+
+model ReviewLog {
+  id         String   @id @default(cuid())
+  userId     String
+  cardId     String
+  quality    Int 
+  reviewedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([userId, reviewedAt])
+  @@map("review_logs")
 }
 
 model CardProgress {

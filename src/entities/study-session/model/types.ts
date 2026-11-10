@@ -4,3 +4,5 @@ export type RecentStudiedDeck = {
   deck: Deck
   lastStudiedAt: Date
 }
+
+export type ActivityDay = { date: string; count: number }

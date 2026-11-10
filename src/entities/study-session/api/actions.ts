@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { prisma } from "@/shared/server/db/prisma"
+import { revalidatePath } from "next/cache"
 
 export async function recordStudySessionAction(deckId: string) {
   const session = await auth()
@@ -17,7 +18,9 @@ export async function recordStudySessionAction(deckId: string) {
 
   if (!deck) throw new Error("Forbidden")
 
-  return prisma.studySession.create({
+  const created = await prisma.studySession.create({
     data: { userId: session.user.id, deckId },
   })
+  revalidatePath("/profile/stats")
+  return created
 }

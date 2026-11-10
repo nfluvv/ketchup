@@ -3,9 +3,9 @@
 import { useCallback, useState } from "react"
 import type { Card as CardType } from "@prisma/client"
 import { isCloseEnough } from "@/shared/client/lib/levenshtein"
-import { useRecordStudySession } from "@/entities/study-session/lib/use-record-study-session"
 import { useResumableQueue } from "@/entities/study-session"
 import type { FinishStats } from "@/shared/client/types"
+import { recordStudySessionAction } from "@/entities/study-session/api/actions"
 
 type Result = "exact" | "typo" | "wrong" | null
 
@@ -38,15 +38,13 @@ export function useLearnFlow({ deckId, cards, onFinish }: UseLearnFlowArgs) {
       ? Math.round(((cards.length - queue.length) / cards.length) * 100)
       : 0
 
-  const { reset: resetRecording } = useRecordStudySession(deckId, isFinished)
-
   const finish = useCallback(
     (correct: number, total: number) => {
-      resetRecording()
+      recordStudySessionAction(deckId).catch(console.error)
       clearProgress()
       onFinish({ correct, total })
     },
-    [onFinish, resetRecording, clearProgress]
+    [deckId, onFinish, clearProgress]
   )
 
   const check = useCallback(() => {

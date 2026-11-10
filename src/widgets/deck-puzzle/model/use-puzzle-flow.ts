@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react"
 import type { Card as CardType } from "@prisma/client"
 import { toChunks, buildBank, shuffle } from "@/shared/client/lib/chunk-text"
-import { useRecordStudySession } from "@/entities/study-session/lib/use-record-study-session"
+import { recordStudySessionAction } from "@/entities/study-session/api/actions"
 import { useResumableQueue } from "@/entities/study-session/lib/use-resumable-queue"
 import type { FinishStats } from "@/shared/client/types"
 
@@ -34,7 +34,6 @@ export function usePuzzleFlow({ deckId, cards, onFinish }: UsePuzzleFlowArgs) {
   const current = queue[0]
   const isFinished = cards.length > 0 && queue.length === 0
 
-  const { reset: resetRecording } = useRecordStudySession(deckId, isFinished)
 
   const correctChunks = useMemo(
     () => (current ? toChunks(current.definition) : []),
@@ -68,8 +67,17 @@ export function usePuzzleFlow({ deckId, cards, onFinish }: UsePuzzleFlowArgs) {
   const finishCard = useCallback(
     (isCorrect: boolean) => {
       if (!current) return
+
       setTotalAnswered((n) => n + 1)
       if (isCorrect) setCorrectCount((n) => n + 1)
+
+      // последняя карточка и ответ верный: завершаем в обработчике, не в рендере
+      if (isCorrect && queue.length === 1) {
+        recordStudySessionAction(deckId).catch(console.error)
+        clearProgress()
+        onFinish({ correct: correctCount + 1, total: totalAnswered + 1 })
+        return
+      }
 
       if (!isCorrect) {
         setWrongFlash(true)
@@ -83,7 +91,10 @@ export function usePuzzleFlow({ deckId, cards, onFinish }: UsePuzzleFlowArgs) {
       })
       setAnswer([])
     },
-    [current, answer, setTotalAnswered, setCorrectCount, setQueue]
+    [
+      current, answer, queue.length, correctCount, totalAnswered, deckId,
+      onFinish, clearProgress, setTotalAnswered, setCorrectCount, setQueue,
+    ]
   )
 
   const check = useCallback(() => {
@@ -93,7 +104,6 @@ export function usePuzzleFlow({ deckId, cards, onFinish }: UsePuzzleFlowArgs) {
   }, [current, answer, separator, finishCard])
 
   if (isFinished) {
-    resetRecording()
     clearProgress()
     onFinish({ correct: correctCount, total: totalAnswered })
   }

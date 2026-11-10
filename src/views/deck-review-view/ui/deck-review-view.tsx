@@ -11,6 +11,7 @@ import type { Quality } from "@/entities/card-progress/lib/sm2"
 import { useTextToSpeech, SpeakButton } from "@/features/card-speech"
 import { useRecordStudySession } from "@/entities/study-session/lib/use-record-study-session"
 import { useKeyboardShortcuts } from "@/shared/client/hooks/use-keyboard-shortcuts"
+import { recordStudySessionAction } from "@/entities/study-session/api/actions"
 
 type DeckReviewViewProps = {
   deck: Deck
@@ -43,27 +44,30 @@ export function DeckReviewView({ deck, dueCards }: DeckReviewViewProps) {
   const current = queue[0]
   useRecordStudySession(deck.id, queue.length === 0 && dueCards.length > 0)
 
-  const handleGrade = useCallback(
-    async (quality: Quality) => {
-      if (!current || isPending || isAnimating) return
-      setIsPending(true)
-      stopSpeaking?.()
+const handleGrade = useCallback(
+  async (quality: Quality) => {
+    if (!current || isPending || isAnimating) return
+    setIsPending(true)
+    stopSpeaking?.()
 
-      try {
-        await reviewCardAction(current.id, quality)
+    try {
+      const isLast = queue.length === 1
 
-        const remaining = queue.slice(1)
-        pendingRef.current = remaining.length === 0 ? "finish" : { remaining }
+      await reviewCardAction(current.id, quality)
+      if (isLast) await recordStudySessionAction(deck.id)
 
-        setIsAnimating(true)
-        setFlipped(false)
-      } catch (error) {
-        setIsPending(false)
-        throw error
-      }
-    },
-    [current, isPending, isAnimating, queue, stopSpeaking]
-  )
+      const remaining = queue.slice(1)
+      pendingRef.current = isLast ? "finish" : { remaining }
+
+      setIsAnimating(true)
+      setFlipped(false)
+    } catch (error) {
+      setIsPending(false)
+      throw error
+    }
+  },
+  [current, isPending, isAnimating, queue, stopSpeaking, deck.id]
+)
 
   const handleFlipEnd = useCallback(() => {
     const action = pendingRef.current
