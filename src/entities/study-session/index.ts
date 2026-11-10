@@ -1,5 +1,6 @@
 export type { RecentStudiedDeck } from "./model/types"
 export { GameHeader } from "./ui/game-header"
+export { ActivityHeatmap } from "./ui/activity-heatmap"
 export * from "./lib/match-pairs"
 export * from "./lib/tier"
 export * from "./lib/use-game-session"

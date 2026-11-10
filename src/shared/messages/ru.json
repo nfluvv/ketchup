@@ -125,7 +125,19 @@
     "paymentFailed": "Не удалось оплатить",
     "openInTelegram": "Откройте приложение в Telegram",
     "streak": "Ударный режим",
-    "days": "дней"
+    "days": "дней",
+    "statsSub": "Посмотреть статистику",
+    "learnedWords": "Выучено слов"
+  },
+
+  "activity": {
+    "title": "Активность",
+    "period": "Последние 6 месяцев",
+    "sessions": "Занятий",
+    "activeDays": "Активных дней",
+    "less": "Меньше",
+    "more": "Больше",
+    "sessionsCount": "{count, plural, one {# занятие} few {# занятия} many {# занятий} other {# занятий}}"
   },
 
   "navigation": {

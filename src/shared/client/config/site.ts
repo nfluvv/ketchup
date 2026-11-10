@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "Doceox",
+  name: "Ketchup",
   description: "Quizlet alternative",
   routes: {
     home: "/",

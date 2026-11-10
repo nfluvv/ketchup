@@ -125,7 +125,19 @@
     "paymentFailed": "Failed to process payment",
     "openInTelegram": "Open in Telegram",
     "streak": "Streak",
-    "days": "days"
+    "days": "days",
+    "statsSub": "Watch your stats",
+    "learnedWords": "Learned words"
+  },
+  
+  "activity": {
+    "title": "Activity",
+    "period": "Last 6 months",
+    "sessions": "Sessions",
+    "activeDays": "Active days",
+    "less": "Less",
+    "more": "More",
+    "sessionsCount": "{count, plural, one {# session} other {# sessions}}"
   },
 
   "navigation": {

@@ -4,8 +4,7 @@ import { LanguageSwitcher } from "@/features/switch-locale"
 import { getTranslations } from "next-intl/server"
 import { Container, SettingsGroup, SettingsRow } from "@/shared/client/ui"
 import { PremiumRow } from "@/features/buy-premium"
-import { Streak } from "@/widgets/streak-widget"
-import { User } from "lucide-react"
+import { User, Eye } from "lucide-react"
 import { AuthGate } from "@/features/telegram-auth"
 
 export async function UserProfileView() {
@@ -25,7 +24,11 @@ export async function UserProfileView() {
           </SettingsGroup>
 
           <SettingsGroup title={t("stats")}>
-            <Streak />
+            <SettingsRow
+              icon={<Eye className="size-5" />}
+              label={t("statsSub")}
+              href="/profile/stats"
+            />
           </SettingsGroup>
 
           <SettingsGroup title={t("settings")}>
