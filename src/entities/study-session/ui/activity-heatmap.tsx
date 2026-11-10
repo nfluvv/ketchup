@@ -1,4 +1,9 @@
 import type { ActivityDay } from "../api/queries"
+import { ScrollToEnd } from "./ScrollToEnd"
+
+const CELL = 10
+const GAP = 3 
+const HEADER = 14 
 
 const LEVELS = [
   "bg-muted",
@@ -28,6 +33,7 @@ type Props = {
 
 export function ActivityHeatmap({ days, locale, labels }: Props) {
   if (days.length === 0) return null
+
   const offset = (new Date(`${days[0].date}T00:00:00Z`).getUTCDay() + 6) % 7
   const weeksCount = Math.ceil((days.length + offset) / 7)
 
@@ -56,48 +62,62 @@ export function ActivityHeatmap({ days, locale, labels }: Props) {
     text: weekdayFmt.format(new Date(Date.UTC(2024, 0, 1 + i))),
   }))
 
+  const rows = `${HEADER}px repeat(7, ${CELL}px)`
+
   return (
     <div className="flex flex-col gap-3">
-      <div
-        className="grid gap-0.75"
-        style={{
-          gridTemplateColumns: `auto repeat(${weeksCount}, minmax(0, 1fr))`,
-        }}
-      >
-        {monthLabels.map((m) => (
-          <div
-            key={`m-${m.col}`}
-            className="mb-0.5 whitespace-nowrap text-[10px] leading-none text-muted-foreground"
-            style={{ gridRow: 1, gridColumn: m.col + 2 }}
-          >
-            {m.text}
-          </div>
-        ))}
-
-        {weekdayLabels.map((w) => (
-          <div
-            key={`w-${w.row}`}
-            className="flex items-center pr-1.5 text-[10px] leading-none text-muted-foreground"
-            style={{ gridRow: w.row + 2, gridColumn: 1 }}
-          >
-            {w.text}
-          </div>
-        ))}
-
-        {days.map((d, i) => {
-          const idx = i + offset
-          return (
+      <div className="flex gap-1.5">
+        {/* дни недели: не скроллятся */}
+        <div
+          className="grid shrink-0"
+          style={{ gridTemplateRows: rows, rowGap: GAP }}
+        >
+          {weekdayLabels.map((w) => (
             <div
-              key={d.date}
-              title={labels.title(d)}
-              className={`aspect-square rounded-[3px] ${LEVELS[getLevel(d.count)]}`}
-              style={{
-                gridRow: (idx % 7) + 2,
-                gridColumn: Math.floor(idx / 7) + 2,
-              }}
-            />
-          )
-        })}
+              key={w.row}
+              className="flex items-center text-[10px] leading-none text-muted-foreground"
+              style={{ gridRow: w.row + 2 }}
+            >
+              {w.text}
+            </div>
+          ))}
+        </div>
+
+        <ScrollToEnd>
+          <div
+            className="grid w-max"
+            style={{
+              gridTemplateColumns: `repeat(${weeksCount}, ${CELL}px)`,
+              gridTemplateRows: rows,
+              gap: GAP,
+            }}
+          >
+            {monthLabels.map((m) => (
+              <div
+                key={m.col}
+                className="whitespace-nowrap text-[10px] leading-none text-muted-foreground"
+                style={{ gridRow: 1, gridColumn: m.col + 1 }}
+              >
+                {m.text}
+              </div>
+            ))}
+
+            {days.map((d, i) => {
+              const idx = i + offset
+              return (
+                <div
+                  key={d.date}
+                  title={labels.title(d)}
+                  className={`rounded-[3px] ${LEVELS[getLevel(d.count)]}`}
+                  style={{
+                    gridRow: (idx % 7) + 2,
+                    gridColumn: Math.floor(idx / 7) + 1,
+                  }}
+                />
+              )
+            })}
+          </div>
+        </ScrollToEnd>
       </div>
 
       <div className="flex items-center justify-end gap-1.5 text-[10px] text-muted-foreground">
