@@ -75,17 +75,6 @@ CREATE TABLE "study_sessions" (
 );
 
 -- CreateTable
-CREATE TABLE "review_logs" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "cardId" TEXT NOT NULL,
-    "quality" INTEGER NOT NULL,
-    "reviewedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "review_logs_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "card_progress" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -137,9 +126,6 @@ CREATE INDEX "study_sessions_userId_completedAt_idx" ON "study_sessions"("userId
 CREATE INDEX "study_sessions_userId_deckId_completedAt_idx" ON "study_sessions"("userId", "deckId", "completedAt");
 
 -- CreateIndex
-CREATE INDEX "review_logs_userId_reviewedAt_idx" ON "review_logs"("userId", "reviewedAt");
-
--- CreateIndex
 CREATE INDEX "card_progress_userId_dueDate_idx" ON "card_progress"("userId", "dueDate");
 
 -- CreateIndex
@@ -162,12 +148,6 @@ ALTER TABLE "study_sessions" ADD CONSTRAINT "study_sessions_userId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "study_sessions" ADD CONSTRAINT "study_sessions_deckId_fkey" FOREIGN KEY ("deckId") REFERENCES "decks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "review_logs" ADD CONSTRAINT "review_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "review_logs" ADD CONSTRAINT "review_logs_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "cards"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "card_progress" ADD CONSTRAINT "card_progress_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
