@@ -23,6 +23,10 @@ export function PremiumRow({ premiumUntil, active }: PremiumRowProps) {
   const until = premiumUntil ? new Date(premiumUntil) : null
 
   const handleClick = async () => {
+    if (premiumUntil && until && until > new Date()) {
+      return
+    }
+
     const tg = window.Telegram?.WebApp
     if (!tg) return toast.error(t("openInTelegram"))
 
@@ -54,7 +58,7 @@ export function PremiumRow({ premiumUntil, active }: PremiumRowProps) {
               date: format.dateTime(until, {
               day: "2-digit",
               month: "2-digit",
-              year: "2-digit",
+              year: "numeric",
             })
             })}
           </span>
