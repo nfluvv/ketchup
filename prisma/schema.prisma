@@ -20,7 +20,7 @@ model User {
 
   timezone  String   @default("UTC")
 
-  isPremium Boolean  @default(false)
+  premiumUntil DateTime?
 
   notifyStreak   Boolean   @default(true) 
   lastNotifiedAt DateTime?

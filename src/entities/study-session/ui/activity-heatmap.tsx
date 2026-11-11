@@ -1,5 +1,5 @@
 import type { ActivityDay } from "../api/queries"
-import { ScrollToEnd } from "./ScrollToEnd"
+import { ScrollToEnd } from "@/shared/client/ui"
 
 const CELL = 10
 const GAP = 3 

@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { PremiumToggle } from "@/features/toggle-premium"
+// import { PremiumToggle } from "@/features/toggle-premium"
 
 import {
   Avatar,
@@ -54,7 +54,7 @@ export function AdminUsersTableRow({
       <TableCell className="font-mono text-xs text-muted-foreground">
         {user.telegramId}
       </TableCell>
-
+{/* 
       <TableCell>
         <PremiumToggle
           userId={user.id}
@@ -62,7 +62,7 @@ export function AdminUsersTableRow({
           isPremium={user.isPremium}
           onSuccess={onPremiumChangeSuccess}
         />
-      </TableCell>
+      </TableCell> */}
     </TableRow>
   )
 }

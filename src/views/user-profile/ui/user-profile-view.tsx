@@ -6,6 +6,7 @@ import { Container, SettingsGroup, SettingsRow } from "@/shared/client/ui"
 import { PremiumRow } from "@/features/buy-premium"
 import { User, Eye } from "lucide-react"
 import { AuthGate } from "@/features/telegram-auth"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 export async function UserProfileView() {
   const profile = await getCurrentUser()
@@ -20,7 +21,7 @@ export async function UserProfileView() {
 
         <div className="mt-8 flex flex-col gap-8">
           <SettingsGroup title={t("subscription")}>
-            <PremiumRow isPremium={profile.isPremium} />
+            <PremiumRow premiumUntil={profile.premiumUntil} active={isPremium(profile)}  />
           </SettingsGroup>
 
           <SettingsGroup title={t("stats")}>

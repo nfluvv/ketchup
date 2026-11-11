@@ -10,7 +10,7 @@ export const Container = ({
   return (
     <div
       className={cn(
-        "mx-auto min-h-screen w-full max-w-md bg-background px-4 text-foreground shadow-xl",
+        "mx-auto w-full max-w-md px-4 text-foreground",
         className
       )}
     >

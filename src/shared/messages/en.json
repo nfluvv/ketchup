@@ -120,7 +120,7 @@
     "adminSub": "Admin Panel",
     "subscription": "Subscription",
     "statusFree": "Free",
-    "statusPremium": "Premium",
+    "statusPremium": "Ketchup+ until {date}",
     "premiumActivated": "Premium activated",
     "paymentFailed": "Failed to process payment",
     "openInTelegram": "Open in Telegram",

@@ -5,13 +5,14 @@ import { revalidatePath } from "next/cache"
 import { prisma } from "@/shared/server/db/prisma"
 import { getCurrentUser } from "@/entities/user/api/queries"
 import { getDecksLimit } from "@/shared/config/decks"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 export async function createDraftDeckAction() {
   const user = await getCurrentUser()
   if (!user) return { success: false as const, error: "unauthorized" }
 
   const count = await prisma.deck.count({ where: { userId: user.id } })
-  if (count >= getDecksLimit(user.isPremium)) {
+  if (count >= getDecksLimit(isPremium(user))) {
     return { success: false as const, error: "decksLimitReached" }
   }
 

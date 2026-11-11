@@ -168,6 +168,10 @@ html {
   color-scheme: light;
 }
 
+main {
+  padding-bottom: 18px;
+}
+
 html.dark {
   color-scheme: dark;
 }

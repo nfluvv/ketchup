@@ -24,7 +24,7 @@ export const getCurrentUser = cache(async () => {
       username: true,
       role: true,
       createdAt: true,
-      isPremium: true,
+      premiumUntil: true,
       notifyStreak: true,
       lastNotifiedAt: true,
       locale: true
@@ -72,7 +72,7 @@ export const getAllUsers = async ({
         image: true,
         role: true,
         createdAt: true,
-        isPremium: true,
+        premiumUntil: true,
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PAGE_SIZE,

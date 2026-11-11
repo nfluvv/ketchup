@@ -3,6 +3,7 @@ import { getOwnedDeckById } from "@/entities/deck/api/queries"
 import { EditDeckView } from "@/views/edit-deck-view"
 import { getCurrentUser } from "@/entities/user/api/queries"
 import { getCardsLimit } from "@/shared/config/decks"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 type Props = {
   params: Promise<{ locale: string; id: string }>
@@ -20,7 +21,7 @@ export default async function EditDeckPage({ params }: Props) {
   return (
     <EditDeckView
       initialDeck={deck}
-      cardsLimit={getCardsLimit(currentUser.isPremium)}
+      cardsLimit={getCardsLimit(isPremium(currentUser))}
     />
   )
 }

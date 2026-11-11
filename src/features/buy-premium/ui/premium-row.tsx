@@ -1,23 +1,32 @@
 "use client"
 
+import { useState } from "react"
 import { Crown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { toast } from "react-hot-toast"
-import { useTranslations } from "next-intl"
+import { useFormatter, useTranslations } from "next-intl"
 
 import { SettingsRow } from "@/shared/client/ui"
 
 import { createStarsInvoice } from "../api/create-stars-invoice"
 
-export function PremiumRow({ isPremium }: { isPremium: boolean }) {
+type PremiumRowProps = {
+  premiumUntil: Date | string | null
+  active: boolean
+}
+
+export function PremiumRow({ premiumUntil, active }: PremiumRowProps) {
   const t = useTranslations("profile")
+  const format = useFormatter()
   const router = useRouter()
+
+  const until = premiumUntil ? new Date(premiumUntil) : null
 
   const handleClick = async () => {
     const tg = window.Telegram?.WebApp
     if (!tg) return toast.error(t("openInTelegram"))
 
-    const res = await createStarsInvoice("premium_lifetime")
+    const res = await createStarsInvoice("premium_month")
     if (!res.success) {
       return toast.error(res.error)
     }
@@ -39,14 +48,21 @@ export function PremiumRow({ isPremium }: { isPremium: boolean }) {
       icon={<Crown className="size-5" />}
       label={t("subscription")}
       value={
-        isPremium ? (
-          <span className="text-amber-500">{t("statusPremium")}</span>
+        active && until ? (
+          <span className="text-amber-500">
+            {t("statusPremium", {
+              date: format.dateTime(until, {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            })
+            })}
+          </span>
         ) : (
           t("statusFree")
         )
       }
-      showChevron={!isPremium}
-      onClick={isPremium ? undefined : handleClick}
+      onClick={handleClick}
     />
   )
 }

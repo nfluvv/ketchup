@@ -4,6 +4,7 @@ import { prisma } from "@/shared/server/db/prisma"
 import { getCurrentUser } from "@/entities/user/api/queries"
 import { getCardsLimit } from "@/shared/config/decks"
 import { createCardSchema, type CreateCardInput } from "../model/schema"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 export async function createCardAction(rawInput: CreateCardInput) {
   const user = await getCurrentUser()
@@ -20,7 +21,7 @@ export async function createCardAction(rawInput: CreateCardInput) {
   })
   if (!deck) return { success: false as const, error: "notFound" }
 
-  if (deck._count.cards >= getCardsLimit(user.isPremium)) {
+  if (deck._count.cards >= getCardsLimit(isPremium(user))) {
     return { success: false as const, error: "cardsLimitReached" }
   }
 

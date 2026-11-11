@@ -5,13 +5,14 @@ import { revalidatePath } from "next/cache"
 import { prisma } from "@/shared/server/db/prisma"
 import { getCurrentUser } from "@/entities/user/api/queries"
 import { getCardsLimit, getDecksLimit } from "@/shared/config/decks"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 export async function cloneDeck(sourceDeckId: string) {
   const user = await getCurrentUser()
   if (!user) return { success: false as const, error: "unauthorized" }
 
   const decksCount = await prisma.deck.count({ where: { userId: user.id } })
-  if (decksCount >= getDecksLimit(user.isPremium)) {
+  if (decksCount >= getDecksLimit(isPremium(user))) {
     return { success: false as const, error: "decksLimitReached" }
   }
 
@@ -28,7 +29,7 @@ export async function cloneDeck(sourceDeckId: string) {
   })
   if (!source) return { success: false as const, error: "deckNotFound" }
 
-  if (source.cards.length > getCardsLimit(user.isPremium)) {
+  if (source.cards.length > getCardsLimit(isPremium(user))) {
     return { success: false as const, error: "cardsLimitReached" }
   }
 

@@ -10,6 +10,7 @@ import { RecentStudiedDecks } from "@/widgets/recent-studied-decks"
 import { DashboardSidebar } from "@/widgets/dashboard-sidebar/ui/DashboardSidebar"
 import { MyDecks } from "@/widgets/my-decks"
 import { AuthGate } from "@/features/telegram-auth"
+import { isPremium } from "@/entities/user/lib/is-premium"
 
 interface DashboardProps {
   searchParams: Promise<{
@@ -34,7 +35,7 @@ export async function DashboardView({ searchParams }: DashboardProps) {
   const currentDecksCount = decks?.length ?? 0
 
   return (
-    <main className="min-h-screen bg-background pb-6 text-foreground">
+    <main className="bg-background text-foreground">
       <Container className="py-4">
         <DashboardHeader />
 
@@ -50,7 +51,7 @@ export async function DashboardView({ searchParams }: DashboardProps) {
 
           <DashboardSidebar
             currentDecksCount={currentDecksCount}
-            isPremium={user?.isPremium || false}
+            isPremium={isPremium(user)}
           />
         </section>
       </Container>
