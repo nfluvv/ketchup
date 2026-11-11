@@ -58,7 +58,7 @@ export function PremiumRow({ premiumUntil, active }: PremiumRowProps) {
               date: format.dateTime(until, {
               day: "2-digit",
               month: "2-digit",
-              year: "numeric",
+              year: "2-digit",
             })
             })}
           </span>
